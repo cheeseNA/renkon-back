@@ -3,7 +3,13 @@ services:
     build: .
     volumes:
       - ./app:/code/app
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8080 --reload
+    command:
+      - /bin/sh
+      - -c
+      - |
+          echo "sleep for 3 sec"
+          sleep 3 
+          uvicorn app.main:app --host 0.0.0.0 --port 8080 --reload
     ports:
       - "8080:8080"
     environment:
