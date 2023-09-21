@@ -10,6 +10,9 @@ packages = [{include = "renkon_back"}]
 python = "^3.9"
 fastapi = "^0.103.1"
 uvicorn = "^0.23.2"
+sqlalchemy = "^2.0.21"
+pymysql = "^1.1.0"
+cryptography = "^41.0.4"
 
 
 [tool.poetry.group.dev.dependencies]
