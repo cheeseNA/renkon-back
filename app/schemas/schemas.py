@@ -14,7 +14,18 @@ class Contact(BaseModel):
     content_type: ContentType
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+
+class ContactCreate(BaseModel):
+    person_id: int
+    content: str
+    content_type: ContentType
+
+
+class PersonCreate(BaseModel):
+    name: str
+    room_id: uuid.UUID
 
 
 class Person(BaseModel):
@@ -24,7 +35,7 @@ class Person(BaseModel):
     contacts: list[Contact] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class Room(BaseModel):
@@ -35,7 +46,7 @@ class Room(BaseModel):
     persons: list[Person] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class RoomCreate(BaseModel):
