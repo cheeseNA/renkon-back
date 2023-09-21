@@ -1,7 +1,7 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, Uuid, DateTime, Enum
-from sqlalchemy.orm import relationship
 import enum
 
+from sqlalchemy import Column, DateTime, Enum, ForeignKey, Integer, String, Uuid
+from sqlalchemy.orm import relationship
 
 from .database import Base
 
@@ -15,8 +15,6 @@ class Room(Base):
     close_at = Column(DateTime)
 
     persons = relationship("Person", back_populates="room")
-    open_rooms = relationship("OpenRoom", back_populates="rooms")
-    closed_rooms = relationship("ClosedRoom", back_populates="rooms")
 
 
 class OpenRoom(Base):
@@ -24,7 +22,7 @@ class OpenRoom(Base):
 
     id = Column(Uuid, ForeignKey("rooms.id"), primary_key=True, index=True)
 
-    rooms = relationship("Room", back_populates="open_rooms")
+    room = relationship("Room")
 
 
 class ClosedRoom(Base):
@@ -32,7 +30,7 @@ class ClosedRoom(Base):
 
     id = Column(Uuid, ForeignKey("rooms.id"), primary_key=True, index=True)
 
-    rooms = relationship("Room", back_populates="closed_rooms")
+    room = relationship("Room")
 
 
 class Person(Base):
