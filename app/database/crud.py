@@ -49,7 +49,7 @@ def get_room_by_ref_code(db: Session, ref_code: str):
 
 
 def create_person(db: Session, person: schemas.PersonCreate):
-    person = models.Person(**person.dict())
+    person = models.Person(**person.model_dump())
     db.add(person)
     db.commit()
     db.refresh(person)
@@ -57,7 +57,7 @@ def create_person(db: Session, person: schemas.PersonCreate):
 
 
 def create_contact(db: Session, contact: schemas.ContactCreate):
-    contact = models.Contact(**contact.dict())
+    contact = models.Contact(**contact.model_dump())
     db.add(contact)
     db.commit()
     db.refresh(contact)
