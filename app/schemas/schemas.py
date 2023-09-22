@@ -21,10 +21,22 @@ class ContactCreate(BaseModel):
     content: str
     content_type: ContentType
 
+    @field_validator("content")
+    def content_must_not_be_empty(cls, v):
+        if len(v) == 0:
+            raise ValueError("content must not be empty")
+        return v
+
 
 class PersonCreate(BaseModel):
     name: str
     room_id: uuid.UUID
+
+    @field_validator("name")
+    def name_must_not_be_empty(cls, v):
+        if len(v) == 0:
+            raise ValueError("name must not be empty")
+        return v
 
 
 class Person(BaseModel):
