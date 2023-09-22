@@ -1,6 +1,6 @@
 import enum
 
-from sqlalchemy import Column, DateTime, Enum, ForeignKey, Integer, String, Uuid
+from sqlalchemy import Column, DateTime, Enum, ForeignKey, String, Uuid
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -36,7 +36,7 @@ class ClosedRoom(Base):
 class Person(Base):
     __tablename__ = "persons"
 
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    id = Column(Uuid, primary_key=True, index=True)
     name = Column(String(32), index=True)
     room_id = Column(Uuid, ForeignKey("rooms.id"))
 
@@ -57,8 +57,8 @@ class ContentType(enum.Enum):
 class Contact(Base):
     __tablename__ = "contacts"
 
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    person_id = Column(Integer, ForeignKey("persons.id"))
+    id = Column(Uuid, primary_key=True, index=True)
+    person_id = Column(Uuid, ForeignKey("persons.id"))
     content = Column(String(32), index=True)
     content_type = Column(Enum(ContentType))
 
