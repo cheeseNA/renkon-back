@@ -7,8 +7,8 @@ from app.database.models import ContentType
 
 
 class Contact(BaseModel):
-    id: int
-    person_id: int
+    id: uuid.UUID
+    person_id: uuid.UUID
     content: str
     content_type: ContentType
 
@@ -17,7 +17,7 @@ class Contact(BaseModel):
 
 
 class ContactCreate(BaseModel):
-    person_id: int
+    person_id: uuid.UUID
     content: str
     content_type: ContentType
 
@@ -40,7 +40,7 @@ class PersonCreate(BaseModel):
 
 
 class Person(BaseModel):
-    id: int
+    id: uuid.UUID
     name: str
     room_id: uuid.UUID
     contacts: list[Contact] = []
