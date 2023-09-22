@@ -5,6 +5,12 @@ $ docker compose build
 $ docker compose up
 ```
 
+# Run tests
+
+```bash
+$ docker compose run web pytest
+```
+
 # Deploy to Cloud Run
 
 Cloud Run でのサービス作成時に, Cloud Build を使用してレポジトリからビルド, デプロイを行うよう指定する.
