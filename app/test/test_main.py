@@ -122,3 +122,72 @@ class TestPerson:
             },
         )
         assert response.status_code == 422, response.text
+
+    # TODO: closed room fail
+
+
+class TestContact:
+    @pytest.fixture
+    def room(self):
+        response = client.post(
+            "/room/create",
+            json={"duration": "P1D"},
+        )
+        return response.json()
+
+    @pytest.fixture
+    def person(self, room):
+        response = client.post(
+            "/person/create",
+            json={
+                "name": "test",
+                "room_id": room["id"],
+            },
+        )
+        return response.json()
+
+    def test_create_contact_success(self, person):
+        response = client.post(
+            "/contact/create",
+            json={
+                "person_id": person["id"],
+                "content": "test",
+                "content_type": "github",
+            },
+        )
+        assert response.status_code == 200, response.text
+        assert response.json()["content"] == "test"
+        assert response.json()["content_type"] == "github"
+
+    def test_create_contact_with_empty_content_fail(self, person):
+        response = client.post(
+            "/contact/create",
+            json={
+                "person_id": person["id"],
+                "content": "",
+                "content_type": "github",
+            },
+        )
+        assert response.status_code == 422, response.text
+
+    def test_create_contact_with_invalid_person_id_fail(self):
+        response = client.post(
+            "/contact/create",
+            json={
+                "person_id": "invalid_person_id",
+                "content": "test",
+                "content_type": "github",
+            },
+        )
+        assert response.status_code == 422, response.text
+
+    def test_create_contact_with_invalid_content_type_fail(self, person):
+        response = client.post(
+            "/contact/create",
+            json={
+                "person_id": person["id"],
+                "content": "test",
+                "content_type": "invalid_content_type",
+            },
+        )
+        assert response.status_code == 422, response.text
