@@ -102,6 +102,9 @@ class TestPerson:
         )
         assert response.status_code == 200, response.text
         assert response.json()["name"] == "test"
+        room_response = client.get(f"/room/{room['ref_code']}")
+        assert len(room_response.json()["persons"]) == 1
+        assert room_response.json()["persons"][0]["name"] == "test"
 
     def test_create_person_with_empty_name_fail(self, room):
         response = client.post(
@@ -146,11 +149,22 @@ class TestContact:
         )
         return response.json()
 
-    def test_create_contact_success(self, person):
+    @pytest.fixture
+    def person_with_ref_code(self, room):
+        response = client.post(
+            "/person/create",
+            json={
+                "name": "test",
+                "room_id": room["id"],
+            },
+        )
+        return {"person": response.json(), "room_ref_code": room["ref_code"]}
+
+    def test_create_contact_success(self, person_with_ref_code):
         response = client.post(
             "/contact/create",
             json={
-                "person_id": person["id"],
+                "person_id": person_with_ref_code["person"]["id"],
                 "content": "test",
                 "content_type": "github",
             },
@@ -158,6 +172,10 @@ class TestContact:
         assert response.status_code == 200, response.text
         assert response.json()["content"] == "test"
         assert response.json()["content_type"] == "github"
+
+        room_response = client.get(f"/room/{person_with_ref_code['room_ref_code']}")
+        assert len(room_response.json()["persons"][0]["contacts"]) == 1
+        assert room_response.json()["persons"][0]["contacts"][0]["content"] == "test"
 
     def test_create_contact_with_empty_content_fail(self, person):
         response = client.post(
