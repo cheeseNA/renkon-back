@@ -1,6 +1,7 @@
 import os
 from datetime import datetime, timedelta
 
+import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -76,7 +77,48 @@ class TestRoom:
         assert response.status_code == 200, response.text
 
     def test_get_room_with_invalid_ref_code_fail(self):
-        response = client.get(f"/room/invalid_ref_code")
+        response = client.get("/room/invalid_ref_code")
         assert response.status_code == 404, response.text
 
     # TODO: close test
+
+
+class TestPerson:
+    @pytest.fixture
+    def room(self):
+        response = client.post(
+            "/room/create",
+            json={"duration": "P1D"},
+        )
+        return response.json()
+
+    def test_create_person_success(self, room):
+        response = client.post(
+            "/person/create",
+            json={
+                "name": "test",
+                "room_id": room["id"],
+            },
+        )
+        assert response.status_code == 200, response.text
+        assert response.json()["name"] == "test"
+
+    def test_create_person_with_empty_name_fail(self, room):
+        response = client.post(
+            "/person/create",
+            json={
+                "name": "",
+                "room_id": room["id"],
+            },
+        )
+        assert response.status_code == 422, response.text
+
+    def test_create_person_with_invalid_room_id_fail(self):
+        response = client.post(
+            "/person/create",
+            json={
+                "name": "test",
+                "room_id": "invalid_room_id",
+            },
+        )
+        assert response.status_code == 422, response.text
