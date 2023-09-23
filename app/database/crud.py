@@ -1,5 +1,4 @@
 import datetime
-import uuid
 
 from sqlalchemy.orm import Session
 
@@ -10,8 +9,6 @@ from app.schemas import schemas
 def create_room(db: Session, room: schemas.RoomCreate):
     now = datetime.datetime.now()
     db_room = models.Room(
-        id=uuid.uuid4(),
-        ref_code=uuid.uuid4().hex[:6],
         created_at=now,
         close_at=now + room.duration,
     )
