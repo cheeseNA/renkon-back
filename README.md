@@ -8,7 +8,7 @@ $ docker compose up
 # Run tests
 
 ```bash
-$ docker compose run web pytest
+$ docker compose run web pytest -v
 ```
 
 # Deploy to Cloud Run
