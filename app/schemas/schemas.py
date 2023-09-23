@@ -1,19 +1,18 @@
 import datetime
 import uuid
 
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, ConfigDict, field_validator
 
 from app.database.models import ContentType
 
 
 class Contact(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: uuid.UUID
     person_id: uuid.UUID
     content: str
     content_type: ContentType
-
-    class Config:
-        from_attributes = True
 
 
 class ContactCreate(BaseModel):
@@ -40,24 +39,22 @@ class PersonCreate(BaseModel):
 
 
 class Person(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: uuid.UUID
     name: str
     room_id: uuid.UUID
     contacts: list[Contact] = []
 
-    class Config:
-        from_attributes = True
-
 
 class Room(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: uuid.UUID
     ref_code: str
     created_at: datetime.datetime
     close_at: datetime.datetime
     persons: list[Person] = []
-
-    class Config:
-        from_attributes = True
 
 
 class RoomCreate(BaseModel):
